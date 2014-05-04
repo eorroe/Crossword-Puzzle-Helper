@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cross Word Puzzle Helper</title>
+	<style type="text/css">
+		#wordHolder{ resize: none; text-transform: capitalize; -webkit-transition: 2s;}
+		#wordHolder:focus{ background-color: azure; }
+		input[type=number]{ width: 40px; -webkit-transition: 2s; }
+		input:focus{ background-color: azure}
+		#letter{ text-transform: uppercase; }
+		table{ float: right;}
+	</style>
+</head>
+<body oncontextmenu="return false" onload="document.body.style.zoom = '200%';">
+<textarea id="wordHolder" cols="25" rows="10" placeholder="Type Words Here" autofocus></textarea>
+<table id="shitCrossCalculator">
+	<tr>
+		<td><label for="pos">Letter Position:</label></td>
+		<td><input type="number" min="1" max="30" id="pos"></td>
+		<td><label for="letter">Letter:</label></td>
+		<td><input type="text" id="letter" maxlength="1" size="1"></td>
+		<td><label for="wordLength">Word Length:</label></td>
+		<td><input type="number" min="1" id="wordLength"></td>
+	</tr>
+</table>
+<ul id="wordsList"></ul>
+<script type="text/javascript">
+//VARIABLES
+wordHolder = document.getElementById('wordHolder');        // CREATE WORDHOLDER ELEMENT VARIABLE
+wordsList = document.getElementById('wordsList');          // CREATE WORDSLIST ELEMENT VARIABLE
+letterPositionElement = document.getElementById('pos');    // CREATE LETTERPOSITION ELEMENT VARIABLE
+letterElement = document.getElementById('letter');         // CREATE LETTER ELEMENT VARIABLE
+wordLengthElement = document.getElementById('wordLength'); // CREATE WORDLENGTH ELEMENT VARIABLE
+
+//FUNCTIONS
+function populateWords(){
+	words = wordHolder.value.split("\n");               // SPLIT EVERY LINE OF TEXT IN THE WORD HOLDER TO A WORD
+	wordsList.innerHTML = "";                           // EMPTY THE WORDLIST
+	if(wordHolder.value == "") words = [];              // IF THE WORDHOLDER IS EMPTY THEN EMPTY THE WORD ARRAY
+	for(i=0;i<words.length;i++){						//FOR EACH WORD:
+		currentword = document.createElement('li');     // CREATE A CURRENT WORD ELEMENT
+		currentword.innerText = words[i].toUpperCase(); // SET IT'S TEXT TO THE CURRRENT WORD
+		wordsList.appendChild(currentword);             // ADD THE CURRENT WORD ELEMENT TO THE WORDLIST
+	};
+};
+
+function findAndPopulateFoundWords(){
+	pos = letterPositionElement.value;          //GET POSITION
+	letter = letterElement.value.toLowerCase(); //GET LETTER
+
+	//FIND MATCHING WORDS
+	foundWords = [];
+	for(i=0;i<words.length;i++){
+		if(wordLengthElement.value == ""){ //CHECK IF WORD LENGTH IS EMPTY
+			if(words[i].charAt(pos - 1).toLowerCase() == letter){
+				foundWords.push(words[i]);
+			};
+		} else {
+			if((words[i].charAt(pos - 1).toLowerCase() == letter) && (words[i].length == wordLengthElement.value)){
+				foundWords.push(words[i]);
+			}
+		};
+	};
+
+	//POPULATE FOUND WORDS
+	if(foundWords.length > 0){                                 // CHECK IF THERE ARE FOUND WORDS BY THERE BEING MORE THAN ONE
+		wordsList.innerHTML = "";                              // EMPAY THE WORDLIST
+		for(i=0;i<foundWords.length;i++){                      // FOR EACH WORD FOUND:
+			foundWord = document.createElement('li');          // CREATE A NEW ELEMENT
+			foundWord.innerHTML = foundWords[i].toUpperCase(); // SET TEXT OF NEW ELEMENT TO THE CURRENT WORD FOUND
+			wordsList.appendChild(foundWord);                  // ADD IT TO THE WORD LIST
+		};
+	} else {
+		wordsList.innerHTML = "<li style='color: red'>NO WORDS MATCHING CRITERIA FOUND</li>";
+	};
+};
+//EVENT LISTENERS
+
+//ARRAY OF INPUT ELEMENTS
+inputs = document.getElementsByTagName('input');
+
+//WHEN TYPED IN WORDHOLEDER POPULATE THE WORDS
+wordHolder.onkeyup = populateWords;
+
+//FOR EACH INPUT ELEMENT:
+for(i=0;i<inputs.length;i++){
+	inputs[i].onkeyup = findAndPopulateFoundWords;  // WHEN TYPED IN IT FIND AND POPULATE THE FOUND WORDS
+	inputs[i].onchange = findAndPopulateFoundWords; // WHEN VALUE CHANGED FIND AND POPULATE THE FOUND WORDS
+};
+</script>
+</body>
+</html>
