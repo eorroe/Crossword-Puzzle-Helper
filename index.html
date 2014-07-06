@@ -10,7 +10,7 @@
 	</style>
 </head>
 <body oncontextmenu="return false" onload="document.body.style.zoom = '200%';">
-<textarea id="wordsHolder" cols="25" rows="10" placeholder="Type Words Here" autofocus></textarea>
+<textarea id="wordsHolder" cols="25" rows="10" placeholder="Type Words Here" spellcheck="false" autofocus></textarea>
 <table>
 	<tr>
 		<td><label for="pos">Letter Position:</label></td>
@@ -93,14 +93,14 @@ replace(WORDS.wordLengthElement, 'numbers');
 inputs = document.getElementsByTagName('input');
 
 //WHEN TYPED IN WORDHOLEDER POPULATE THE WORDS
-WORDS.wordsHolder.addEventListener('keyup', function(){
+WORDS.wordsHolder.addEventListener('input', function(){
 	WORDS.collectWords();
 	WORDS.populateWords();
 });
 
 //FOR EACH INPUT ELEMENT:
 for(i=0;i<inputs.length;i++){
-	inputs[i].addEventListener('keyup', function(){
+	inputs[i].addEventListener('input', function(){
 		WORDS.findMatchingWords();
 		WORDS.populateFoundWords();
 	});
