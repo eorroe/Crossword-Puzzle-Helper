@@ -4,10 +4,8 @@
 	<title>Cross Word Puzzle Helper</title>
 	<style type="text/css">
 		#wordsHolder{ resize: none; text-transform: capitalize; -webkit-transition: 2s; }
-		#wordsHolder:focus{ background-color: azure; }
-		input[type=number]{ width: 40px; -webkit-transition: 2s; }
-		input:focus{ background-color: azure; }
-		#letter{ text-transform: uppercase; }
+		input{ width: 40px; -webkit-transition: 2s; text-transform: uppercase;}
+		*:focus{ background-color: azure}
 		table{ float: right; }
 	</style>
 </head>
@@ -16,7 +14,7 @@
 <table>
 	<tr>
 		<td><label for="pos">Letter Position:</label></td>
-		<td><input type="number" min="1" max="30" id="pos"></td>
+		<td><input type="number" min="1" max="30" id="pos" value="1"></td>
 		<td><label for="letter">Letter:</label></td>
 		<td><input type="text" id="letter" maxlength="1" size="1"></td>
 		<td><label for="wordLength">Word Length:</label></td>
@@ -31,7 +29,7 @@ var WORDS = {
 	positionElement: document.getElementById('pos'),
 	letterElement: document.getElementById('letter'),
 	wordLengthElement: document.getElementById('wordLength'),
-	clearWords: this.words = [],
+
 	emptyWordsList: function(){
 		this.wordsList.innerHTML = "";
 	},
@@ -74,6 +72,20 @@ var WORDS = {
 		};
 	}
 };
+function replace(el, type){
+	el.addEventListener('keyup', function(){
+		if(type == "numbers"){
+			this.value = this.value.replace(/[a-z]/gi, '');
+		} else if(type = "letters"){
+			this.value = this.value.replace(/[0-9]/gi, '');
+		};
+	});
+};
+
+replace(WORDS.positionElement, 'numbers');
+replace(WORDS.letterElement, 'letters');
+replace(WORDS.wordLengthElement, 'numbers');
+
 
 /*------------------------------------------------------------EVENT LISTENERS--------------------------------------------------------------------------------------------------------------*/
 
@@ -89,10 +101,6 @@ WORDS.wordsHolder.addEventListener('keyup', function(){
 //FOR EACH INPUT ELEMENT:
 for(i=0;i<inputs.length;i++){
 	inputs[i].addEventListener('keyup', function(){
-		WORDS.findMatchingWords();
-		WORDS.populateFoundWords();
-	});
-	inputs[i].addEventListener('change', function(){
 		WORDS.findMatchingWords();
 		WORDS.populateFoundWords();
 	});
